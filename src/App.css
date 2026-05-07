@@ -48,3 +48,34 @@
 .read-the-docs {
   color: #888;
 }
+
+.map-data-card {
+  left: 1rem;
+  right: 1rem;
+  padding: 0em;
+  width: auto;
+  max-width: calc(100% - 2rem);
+  height: auto;
+}
+
+.carousel-item img {
+  height: 600px;
+  width: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .carousel-item img { height: 400px; }
+  .map-data-card {
+    left: 1rem;
+    right: auto;
+    width: 320px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .carousel-item img { height: 700px; }
+  .map-data-card {
+    left: 5rem;
+  }
+}

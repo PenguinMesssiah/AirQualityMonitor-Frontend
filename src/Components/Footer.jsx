@@ -6,7 +6,7 @@ function Footer() {
   ]
 
   return (
-    <footer className="mt-2 max-h-24 w-full bg-blue-200 border-gray-700  py-6 px-4 rounded-md">
+    <footer className="mt-2 w-full bg-blue-200 border-gray-700  py-6 px-4 rounded-md">
       <div className="max-w-full mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           

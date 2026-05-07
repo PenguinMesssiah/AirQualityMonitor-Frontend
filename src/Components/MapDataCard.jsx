@@ -27,14 +27,10 @@ function MapDataCard({
 
     return (
         <Card
-            className="shadow-lg border-0"
+            className="map-data-card shadow-lg border-0"
             style={{
                 position: 'absolute',
                 top: '6%',
-                left: '5rem',
-                width: '320px',
-                height: '425px',
-                padding: '0em',
                 zIndex: 1000,
                 backgroundColor: 'rgba(255, 255, 255, 0.75)',
                 backdropFilter: 'blur(10px)'

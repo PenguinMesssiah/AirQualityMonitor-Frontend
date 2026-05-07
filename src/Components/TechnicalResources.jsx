@@ -154,7 +154,7 @@ function TechnicalResources() {
                     <strong>Specs:</strong> ESP32 chip with 802.11 b/g/n WiFi, TLS/SSL support<br/>
                     <a href="https://www.adafruit.com/product/4264" target="_blank" rel="noopener noreferrer"
                        style={{ color: '#0C447C' }}>Product Page</a> |
-                    <a href="https://learn.adafruit.com/adafruit-airlift-featherwing-esp32-wifi-co-processor" target="_blank" rel="noopener noreferrer"
+                    <a href="https://learn.adafruit.com/adafruit-airlift-featherwing-esp32-wifi-co-processor-featherwing/overview" target="_blank" rel="noopener noreferrer"
                        style={{ color: '#0C447C', marginLeft: '0.5rem' }}>Documentation</a>
                   </Card.Text>
                 </Card.Body>
@@ -311,7 +311,7 @@ function TechnicalResources() {
                     RESTful API and data storage
                   </li>
                   <li>
-                    <a href="https://drive.google.com/file/d/1hvZsCnCgavwJCYUJWfIVS5v6UL0-1wS7/view?usp=sharing" target='_blank' style={{ color: '#0C447C', fontWeight: 'bold' }}>Arduino Firmware</a> -
+                    <a href="https://github.com/PenguinMesssiah/HazelwoodServer/tree/main/HazelwoodSendData" target='_blank' style={{ color: '#0C447C', fontWeight: 'bold' }}>Arduino Firmware</a> -
                     Sensor code for Feather M4 microcontroller
                   </li>
                   <li>

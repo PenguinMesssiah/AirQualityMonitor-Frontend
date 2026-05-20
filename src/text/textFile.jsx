@@ -31,7 +31,7 @@ export const EPA = (
             </ol>
         An AQI value of 100 generally corresponds to the level of the short-term National Ambient Air Quality Standard for a given pollutant, meaning values at or below 100 are generally considered satisfactory. 
         The EPA tracks five major pollutants regulated under the Clean Air Act: ground-level ozone, particulate matter (PM2.5 and PM10), carbon monoxide, nitrogen dioxide, and sulfur dioxide. While air pollution can affect anyone, children, older adults, people with asthma or cardiovascular disease, and those who work or exercise outdoors are particularly vulnerable.
-        <b> Our system tracks temperature, humidity, and particle matter (PM2.5).</b>
+        <b> Our system tracks temperature, humidity, along with particle matter at sizes 2.5um (PM2.5 microns), 10um (PM10 microns), and all particles greater than 0.2um (PM03 microns).</b>
     </div>
 );
 

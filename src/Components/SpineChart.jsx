@@ -30,7 +30,8 @@ function SpineChart({title, data, timeRangeDays = 30}) {
     const rawTemperatureData = data.filter((item) => item.type === "temperature");
     const rawHumidityData = data.filter((item) => item.type === "humidity");
     const rawAQIData25 = data.filter((item) => item.type === "aqi_pm25");
-	const rawAQIData10 = data.filter((item) => item.type === "aqi_pm100")
+	const rawAQIData10 = data.filter((item) => item.type === "aqi_pm100");
+	const rawAQIData03 = data.filter((item) => item.type === "aqi_pm03um");
 
     // Process Temperature data (convert Celsius to Fahrenheit)
     const temperatureDataPoints = [];
@@ -81,15 +82,30 @@ function SpineChart({title, data, timeRangeDays = 30}) {
         }
     }
 
+	// Process AQI data (03u)
+    const aqiDataPoints03 = [];
+    for (let i = 0; i < rawAQIData03.length; i++) {
+        const recentValues = filterRecentData(rawAQIData03[i].values, timeRangeDays);
+        for (let j = 0; j < recentValues.length; j++) {
+            aqiDataPoints03.push({
+                x: new Date(recentValues[j].timestamp),
+                y: recentValues[j].value
+            });
+        }
+    }
+
     // Sort data points by timestamp to ensure proper line connections
     temperatureDataPoints.sort((a, b) => a.x - b.x);
     humidityDataPoints.sort((a, b) => a.x - b.x);
     aqiDataPoints25.sort((a, b) => a.x - b.x);
 	aqiDataPoints10.sort((a, b) => a.x - b.x);
+	aqiDataPoints03.sort((a, b) => a.x - b.x);
 
     console.log("Temperature data points:", temperatureDataPoints);
     console.log("Humidity data points:", humidityDataPoints);
-    console.log("AQI data points:", aqiDataPoints25)
+    console.log("AQI data points (25):", aqiDataPoints25)
+	console.log("AQI data points (10):", aqiDataPoints10)
+	console.log("AQI data points (03):", aqiDataPoints03)
 
     // Format time range display
     const getTimeRangeText = () => {
@@ -125,7 +141,7 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 					lineColor: "#aaaaaa"
 				},
 			},
-			axisY: {
+			axisY: [{
 				title: "Temperature (°F)",
 				titleFontColor: "#C24642",
 				lineColor: "#C24642",
@@ -133,14 +149,15 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				tickColor: "#C24642",
 				suffix: "°F"
 			},
-			axisY2: [{
+			{
 				title: "Humidity (%)",
 				titleFontColor: "#036843ff",
 				lineColor: "#036843ff",
 				labelFontColor: "#036843ff",
 				tickColor: "#036843ff",
 				suffix: "%"
-			},
+			}],
+			axisY2: [
 			{
 				title: "PM2.5 AQI",
 				titleFontColor: "#6D78AD",
@@ -154,6 +171,13 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				lineColor: "#D4881A",
 				labelFontColor: "#D4881A",
 				tickColor: "#D4881A"
+			},
+			{
+				title: "PM03 AQI",
+				titleFontColor: "#d565d7ff",
+				lineColor: "#d565d7ff",
+				labelFontColor: "#d565d7ff",
+				tickColor: "#d565d7ff"
 			}],
 			toolTip: {
 				shared: true
@@ -166,6 +190,43 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 					} else {
 						e.dataSeries.visible = true;
 					}
+
+					const axisColors = {
+						"primary:0": "#C24642",
+						"primary:1": "#036843ff",
+						"secondary:0": "#6D78AD",
+						"secondary:1": "#D4881A",
+						"secondary:2": "#d565d7ff"
+					};
+
+					// Track which axes have at least one visible series
+					const axisVisible = {};
+					e.chart.options.data.forEach((series) => {
+						const isVisible = typeof series.visible === "undefined" || series.visible;
+						const axisType = (!series.axisYType || series.axisYType === "primary") ? "primary" : "secondary";
+						const axisIndex = series.axisYIndex || 0;
+						const key = `${axisType}:${axisIndex}`;
+						axisVisible[key] = axisVisible[key] || isVisible;
+					});
+
+					// Show or hide each axis based on whether any of its series are visible
+					Object.entries(axisVisible).forEach(([key, visible]) => {
+						const [axisType, axisIndexStr] = key.split(":");
+						const axisIndex = parseInt(axisIndexStr);
+						const color = visible ? (axisColors[key] || "#000000") : "transparent";
+
+						const axis = axisType === "primary"
+							? e.chart.axisY[axisIndex]
+							: e.chart.axisY2[axisIndex];
+
+						if (axis) {
+							axis.set("titleFontColor", color, false);
+							axis.set("labelFontColor", color, false);
+							axis.set("lineColor", color, false);
+							axis.set("tickColor", color, false);
+						}
+					});
+
 					e.chart.render();
 				}
 			},
@@ -173,6 +234,8 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				type: "spline",
 				name: "Temperature",
 				color: "#C24642",
+				axisYType: "primary",
+				axisYIndex: 0,
 				showInLegend: true,
 				xValueFormatString: "MMM DD, YYYY HH:mm",
 				yValueFormatString: "#,##0.##°F",
@@ -182,8 +245,8 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				type: "spline",
 				name: "Humidity",
 				color: "#036843ff",
-				axisYType: "secondary",
-				axisYIndex: 0,
+				axisYType: "primary",
+				axisYIndex: 1,
 				showInLegend: true,
 				xValueFormatString: "MMM DD, YYYY HH:mm",
 				yValueFormatString: "#,##0.##%",
@@ -194,7 +257,7 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				name: "AQI (PM2.5)",
 				color: "#6D78AD",
 				axisYType: "secondary",
-				axisYIndex: 1,
+				axisYIndex: 0,
 				showInLegend: true,
 				xValueFormatString: "MMM DD, YYYY HH:mm",
 				yValueFormatString: "#,##0.##",
@@ -205,11 +268,22 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 				name: "AQI (PM10)",
 				color: "#D4881A",
 				axisYType: "secondary",
-				axisYIndex: 2,
+				axisYIndex: 1,
 				showInLegend: true,
 				xValueFormatString: "MMM DD, YYYY HH:mm",
 				yValueFormatString: "#,##0.##",
 				dataPoints: aqiDataPoints10
+			},
+		{
+				type: "spline",
+				name: "AQI (PM03)",
+				color: "#d565d7ff",
+				axisYType: "secondary",
+				axisYIndex: 2,
+				showInLegend: true,
+				xValueFormatString: "MMM DD, YYYY HH:mm",
+				yValueFormatString: "#,##0.##",
+				dataPoints: aqiDataPoints03
 			}]
         }
             

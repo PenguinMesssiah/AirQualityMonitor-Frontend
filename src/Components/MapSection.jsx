@@ -7,13 +7,13 @@ import MapDataCard from '@/Components/MapDataCard'
 import 'leaflet/dist/leaflet.css'
 
 const DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+    iconUrl: markerIcon,
+    iconRetinaUrl: markerIcon2x,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
 })
 
 L.Marker.prototype.options.icon = DefaultIcon
@@ -23,11 +23,21 @@ function MapSection({ markerList, selectedDevice, onClose }) {
         ? Math.round((selectedDevice.temperature * 9 / 5) + 32)
         : null;
 
+    const aqiDisplay = (selectedDevice) => {
+        if (selectedDevice?.device_quality != 0) {
+            return selectedDevice?.device_quality;
+        } else if (selectedDevice?.particle_03um != 0) {
+            return selectedDevice?.particle_03um;
+        } else {
+            return null;
+        }
+    }
+    
     return (
         <div style={{ position: 'relative' }}>
             <MapDataCard
                 locationName={selectedDevice?.displayName ?? "Select a Location"}
-                aqi={selectedDevice?.device_quality ?? null}
+                aqi={aqiDisplay(selectedDevice)}
                 temperature={temperature}
                 humidity={selectedDevice ? Math.round(selectedDevice.humidity) : null}
                 sensorTimestamp={selectedDevice ? selectedDevice.timestamp : null}

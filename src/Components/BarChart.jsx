@@ -8,10 +8,17 @@ function BarChart({title, data}) {
     var max = 0;
 
     for(var i=0;i<data.length;i++) {
-        chartData.push({
-            label: data[i].device_name,
-            y: data[i].device_quality
-        })
+        if(data[i].device_quality!=0) {
+            chartData.push({
+                label: data[i].device_name,
+                y: data[i].device_quality
+            })
+        } else if (data[i].device_quality===0 && data[i].particle_03um!=0) {
+            chartData.push({
+                label: data[i].device_name,
+                y: data[i].particle_03um
+            })
+        }
         max=Math.max(max, data[i].device_quality)
     }
 

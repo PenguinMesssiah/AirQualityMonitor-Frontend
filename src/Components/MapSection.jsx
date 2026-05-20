@@ -30,6 +30,7 @@ function MapSection({ markerList, selectedDevice, onClose }) {
                 aqi={selectedDevice?.device_quality ?? null}
                 temperature={temperature}
                 humidity={selectedDevice ? Math.round(selectedDevice.humidity) : null}
+                sensorTimestamp={selectedDevice ? selectedDevice.timestamp : null}
                 isVisible={selectedDevice !== null}
                 onClose={onClose}
             />

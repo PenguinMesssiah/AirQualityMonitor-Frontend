@@ -6,6 +6,7 @@ function MapDataCard({
     aqi = null,
     temperature = null,
     humidity = null,
+    sensorTimestamp = null,
     isVisible = false,
     onClose
 }) {
@@ -22,6 +23,50 @@ function MapDataCard({
     };
 
     const aqiInfo = getAQIInfo(aqi);
+    
+    const getSensorStatus = (sensorTimestamp) => {
+        try {
+            const date = new Date(sensorTimestamp);
+            const now = new Date();
+    
+            const diffMs = now - date;
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if(diffHours < 12) {
+                return (<>
+                    <p className="text-green-700 font-semibold medium mt-0 mb-0 text-center">
+                        Sensor Online
+                    </p>
+                </>)
+            } else if (diffHours >= 12 && diffHours <=24 ) {
+                return (<>
+                    <p className="text-yellow-700 font-semibold medium mt-0 mb-0 text-center">
+                        {`Sensor offline for ${diffHours} hour${diffHours !== 1 ? 's' : ''}`}
+                    </p>
+                </>)
+            } else if (diffDays >= 1) {
+                return (<>
+                    <p className="text-yellow-700 font-semibold medium mt-0 mb-0 text-center">
+                        {`Sensor offline for ${diffDays} day${diffDays !== 1 ? 's' : ''}`}
+                    </p>
+                </>)
+            } else {
+                return (<>
+                    <p className="text-yellow-700 font-semibold medium mt-0 mb-0 text-center">
+                        {"Sensor offline since " + date.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        })}
+                    </p>
+                </>)
+            }
+        } catch (error) {
+            return 'Invalid date';
+        }
+    }
+    let sensorStatus = getSensorStatus(sensorTimestamp);
 
     if (!isVisible) return null;
 
@@ -111,9 +156,7 @@ function MapDataCard({
 
                 {/* Last Updated (Optional - for future use) */}
                 <div className="mt-3 pt-2 border-top">
-                    <p className="text-muted small mb-0 text-center">
-                        Click map markers to view data
-                    </p>
+                    {sensorStatus}
                 </div>
             </Card.Body>
         </Card>

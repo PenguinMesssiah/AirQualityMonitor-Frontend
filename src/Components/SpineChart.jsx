@@ -101,7 +101,7 @@ function SpineChart({title, data, timeRangeDays = 30}) {
             return `Showing data from the last ${timeRangeDays} days`;
         }
     };
-	
+
     const options = {
 			theme: "light2",
 			backgroundColor: "#fdfaf6",
@@ -123,7 +123,7 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 					collapsibleThreshold: 0.03,
 					type: "straight",
 					lineColor: "#aaaaaa"
-				}
+				},
 			},
 			axisY: {
 				title: "Temperature (°F)",

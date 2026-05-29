@@ -24,12 +24,10 @@ function MapSection({ markerList, selectedDevice, onClose }) {
         : null;
 
     const aqiDisplay = (selectedDevice) => {
-        if (selectedDevice?.device_quality != 0) {
-            return selectedDevice?.device_quality;
-        } else if (selectedDevice?.particle_03um != 0) {
+        if (selectedDevice?.device_quality == 0 && selectedDevice?.particle_03um != 0) {
             return selectedDevice?.particle_03um;
         } else {
-            return null;
+            return selectedDevice?.device_quality;
         }
     }
     

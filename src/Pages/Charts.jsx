@@ -50,7 +50,10 @@ function ChartsPage() {
                 setLoading(true);
                 setAlertMessage(null);
 
-                const json = await fetchJsonWithRetry(`${baseURL}/api/sensor_data/${selectedDevice}`);
+                const readingsPerDay = (24 * 60) / 5; // sensor reports every 5 minutes
+                const limit = timeRangeDays * readingsPerDay;
+
+                const json = await fetchJsonWithRetry(`${baseURL}/api/sensor_data/${selectedDevice}?limit=${limit}`);
                 setDeviceData(json);
             } catch (err) {
                 const errorMsg = err instanceof Error ? err.message : "Unknown Error Retrieving Device Data";
@@ -60,7 +63,7 @@ function ChartsPage() {
             }
         };
         fetchDeviceData();
-    }, [selectedDevice])
+    }, [selectedDevice, timeRangeDays])
     
     useEffect(() => {
         if(deviceData.length > 0) {

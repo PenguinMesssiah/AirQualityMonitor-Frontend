@@ -42,7 +42,7 @@ function HomePage() {
                 
                 //Set Marker List
                 var markerList = json.map((item, index) => {
-                  const displayName = item.device_name === "Edith" ? "Arts Excursion Unlimited" : `Device #${index}`;
+                  const displayName = item.device_name === "AEU" ? "Arts Excursion Unlimited" : `Device #${index}`;
                   const enrichedItem = { ...item, displayName };
                   return (
                     <Marker
@@ -54,8 +54,8 @@ function HomePage() {
                   );
                 })
                 setMarkerList(markerList);
-                const edithIndex = json.findIndex((item) => item.device_name === "Edith");
-                if (edithIndex !== -1) setSelectedDevice({ ...json[edithIndex], displayName: "Arts Excursion Unlimited" });
+                const aeuIndex = json.findIndex((item) => item.device_name === "AEU");
+                if (aeuIndex !== -1) setSelectedDevice({ ...json[aeuIndex], displayName: "Arts Excursion Unlimited" });
 
                 // Server is online if we successfully fetched data
                 setServerStatus('online');

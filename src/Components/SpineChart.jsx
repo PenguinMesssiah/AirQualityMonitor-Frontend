@@ -122,6 +122,9 @@ function SpineChart({title, data, timeRangeDays = 30}) {
 			theme: "light2",
 			backgroundColor: "#fdfaf6",
 			animationEnabled: true,
+			zoomEnabled: true,
+			zoomType: "x",
+			panEnabled: true,
 			title: {
 				text: title
 			},
